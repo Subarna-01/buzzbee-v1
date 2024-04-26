@@ -1,6 +1,6 @@
 import hashlib
 
-class HashingAlgorithms():
+class HashingAlgorithm():
     
     def sha256_encoder(string):
         string_bytes = string.encode('utf-8') # Convert the string to bytes

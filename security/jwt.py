@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordBearer
 from datetime import timedelta, datetime
 from dotenv import load_dotenv
 from jose import JWTError, jwt
-from src.schemas.token_schemas import Token, TokenData
+from schemas.token_schema import Token, TokenData
 
 load_dotenv()
 

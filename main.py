@@ -1,18 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routes.users_routes import users_router
-from src.routes.artists_routes import artists_router
-from src.models.artists_models import Base as artists_models_base
-from src.models.users_models import Base as users_models_base
+from src.routes.user_route import user_router
+from src.routes.song_route import song_router
+from src.models.user_model import Base as user_model_base
+from src.models.song_model import Base as song_model_base
 from database.connection import engine
 
-artists_models_base.metadata.create_all(bind=engine)
-users_models_base.metadata.create_all(bind=engine)
+user_model_base.metadata.create_all(bind=engine)
+song_model_base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(artists_router)
-app.include_router(users_router)
+app.include_router(user_router)
+app.include_router(song_router)
 
 origins = [ '*' ]
 

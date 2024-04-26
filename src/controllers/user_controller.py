@@ -3,17 +3,17 @@ from fastapi import Response, status
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
-from src.models.users_models import UserAccountMaster
-from src.schemas.users_schemas import UserSignInSchema, UserSignUpSchema
-from security.hashing import HashingAlgorithms
+from src.models.user_model import UserAccountMaster
+from src.schemas.user_schema import UserSignInSchema, UserSignUpSchema
+from security.hashing import HashingAlgorithm
 
-class UsersController():
+class UserController():
 
     async def create_user(self,request_body: UserSignUpSchema,response: Response,db: Session) -> dict:
         try:
             user_id = str(uuid.uuid1())
             username = request_body.username
-            encrypted_password = HashingAlgorithms().sha256_encoder(request_body.password)
+            encrypted_password = HashingAlgorithm().sha256_encoder(request_body.password)
             email_id = request_body.email_id
             created_on = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -42,7 +42,7 @@ class UsersController():
     
     async def authenticate_user(self,request_body: UserSignInSchema,response: Response,db: Session) -> dict:
         try:
-            encrypted_password = HashingAlgorithms().sha256_encoder(request_body.password)
+            encrypted_password = HashingAlgorithm().sha256_encoder(request_body.password)
             is_user_exists = db.query(UserAccountMaster).filter(and_(UserAccountMaster.username == request_body.username,
                                                                      UserAccountMaster.password == encrypted_password
                                                                 )).first()
