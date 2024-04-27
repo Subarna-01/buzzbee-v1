@@ -1,8 +1,15 @@
 import pyrebase
 import os
 from dotenv import load_dotenv
+import collections
 
 load_dotenv()
+
+try:
+    from collections import abc
+    collections.MutableMapping = abc.MutableMapping
+except:
+    pass
 
 class FirebaseConfig():
 
