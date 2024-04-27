@@ -9,6 +9,9 @@ from security.hashing import HashingAlgorithm
 
 class UserController():
 
+    def __init__(self):
+            pass
+    
     async def create_user(self,request_body: UserSignUpSchema,response: Response,db: Session) -> dict:
         try:
             user_id = str(uuid.uuid1())
@@ -35,8 +38,8 @@ class UserController():
             response.status_code = status.HTTP_201_CREATED
             return response_json
         except Exception as e:
-            response.status_code = status.HTTP_400_BAD_REQUEST
             response_json = { 'message': 'An error occurred', 'error': str(e),'is_created': 'Failure','status_code': status.HTTP_400_BAD_REQUEST }
+            response.status_code = status.HTTP_400_BAD_REQUEST
             return response_json
 
     
@@ -53,6 +56,6 @@ class UserController():
             else:
                 raise Exception('User does not exist')
         except Exception as e:
-            response.status_code = status.HTTP_401_UNAUTHORIZED
             response_json = { 'message': 'An error occurred', 'error': str(e),'sign_in_status': 'Failure','status_code': status.HTTP_401_UNAUTHORIZED }
+            response.status_code = status.HTTP_401_UNAUTHORIZED
             return response_json

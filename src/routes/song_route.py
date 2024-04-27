@@ -10,3 +10,9 @@ song_router = APIRouter(prefix='/songs')
 async def get_categories(response: Response,db: Session = Depends(get_db)):
     response = await SongController().get_song_categories(response,db)
     return jsonable_encoder(response)
+
+@song_router.get('/get-songs/{category}')
+async def get_songs_by_category(category: str,response: Response,db: Session = Depends(get_db)):
+    category = category.capitalize()
+    response = await SongController().get_songs_by_category(category,response,db)
+    return jsonable_encoder(response)
