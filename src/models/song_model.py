@@ -8,4 +8,4 @@ class CategorySongs(Base):
 
     category_id = Column(String(50),primary_key=True,nullable=False)
     category_name = Column(String(50),nullable=False)
-    total_no_of_songs = Column(Integer,nullable=False)
+    total_songs = Column(Integer,nullable=False)
