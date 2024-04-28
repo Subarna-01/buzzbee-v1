@@ -20,9 +20,9 @@ class UserController():
             email_id = request_body.email_id
             created_on = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
 
-            is_active_with_email_exists = db.query(UserAccountMaster).filter(and_(UserAccountMaster.email_id==request_body.email_id,UserAccountMaster.is_active==True))
+            # is_active_with_email_exists = db.query(UserAccountMaster).filter(and_(UserAccountMaster.email_id==request_body.email_id,UserAccountMaster.is_active==True))
             
-            if is_active_with_email_exists: raise Exception('This email already exists')
+            # if is_active_with_email_exists: raise Exception('This email already exists')
             
             new_user = UserAccountMaster(user_id=user_id,
                                          username=username,

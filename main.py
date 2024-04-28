@@ -4,10 +4,12 @@ from src.routes.user_route import user_router
 from src.routes.song_route import song_router
 from src.models.user_model import Base as user_model_base
 from src.models.song_model import Base as song_model_base
+from src.models.artist_model import Base as artist_model_base
 from database.connection import engine
 
 user_model_base.metadata.create_all(bind=engine)
 song_model_base.metadata.create_all(bind=engine)
+artist_model_base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

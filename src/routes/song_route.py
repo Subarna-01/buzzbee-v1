@@ -16,3 +16,8 @@ async def get_songs_by_category(category: str,response: Response,db: Session = D
     category = category.capitalize()
     response = await SongController().get_songs_by_category(category,response,db)
     return jsonable_encoder(response)
+
+@song_router.get('/get-songs-by-random-artist/{category}')
+async def get_songs_by_random_artist(category: str,response: Response,db: Session = Depends(get_db)):
+    response = await SongController().get_songs_by_random_artist(category,response,db)
+    return jsonable_encoder(response)
