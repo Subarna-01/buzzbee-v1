@@ -1,6 +1,6 @@
 import random
 from fastapi import Response, status
-from sqlalchemy import and_
+from sqlalchemy import and_,func
 from sqlalchemy.orm import Session
 from src.models.song_model import CategorySongs, MasterSongs
 from src.models.artist_model import ArtistAccountMaster
@@ -15,7 +15,7 @@ class SongController():
         all_categories = db.query(CategorySongs).all()
         return all_categories
     
-    async def get_songs_by_category(self,category: str,response: Response,db: Session) -> dict:
+    async def get_songs_by_category(self,category: str,response: Response,offset: int,limit: int,db: Session) -> dict:
         try:
             songs = []
             all_songs = db.query(
@@ -31,7 +31,7 @@ class SongController():
                             CategorySongs.category_id == MasterSongs.category_id
                         ).filter(
                             CategorySongs.category_name == category
-                        ).all()
+                        ).offset(offset).limit(limit).all()
             
             for song in all_songs:
                 audio_download_url = self.firebase_config_obj.get_file_download_url(song[5])
