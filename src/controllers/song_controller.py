@@ -6,10 +6,11 @@ from src.models.song_model import CategorySongs, MasterSongs
 from src.models.artist_model import ArtistAccountMaster
 from config.firebase_config import FirebaseConfig
 
+
 class SongController():
     
     def __init__(self):
-        self.firebase_config_obj = FirebaseConfig()
+        self.firebase_instance = FirebaseConfig()
 
     async def get_song_categories(self,response: Response,db: Session) -> dict:
         all_categories = db.query(CategorySongs).all()
@@ -34,8 +35,8 @@ class SongController():
                         ).offset(offset).limit(limit).all()
             
             for song in all_songs:
-                audio_download_url = self.firebase_config_obj.get_file_download_url(song[5])
-                cover_image_download_url = self.firebase_config_obj.get_file_download_url(song[6])
+                audio_download_url = self.firebase_instance.get_file_download_url(song[5])
+                cover_image_download_url = self.firebase_instance.get_file_download_url(song[6])
                 song_obj = { 
                             'category_id': song[0],
                             'category_name': song[1],
@@ -90,8 +91,8 @@ class SongController():
                                     )
                             ).all()
             for song in all_songs:
-                audio_download_url = self.firebase_config_obj.get_file_download_url(song[5])
-                cover_image_download_url = self.firebase_config_obj.get_file_download_url(song[6])
+                audio_download_url = self.firebase_instance.get_file_download_url(song[5])
+                cover_image_download_url = self.firebase_instance.get_file_download_url(song[6])
                 song_obj = { 
                             'category_id': song[0],
                             'category_name': song[1],
