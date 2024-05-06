@@ -1,9 +1,12 @@
 import random
+import uuid
 from fastapi import Response, status
 from sqlalchemy import and_,func
 from sqlalchemy.orm import Session
+from datetime import datetime, timezone
 from src.models.song_model import CategorySongs, MasterSongs
 from src.models.artist_model import ArtistAccountMaster
+from src.schemas.song_schema import CreatePlayListSchema
 from config.firebase_config import FirebaseConfig
 
 
@@ -112,3 +115,16 @@ class SongController():
             response_json = { 'message': 'An error occurred', 'error': str(e),'status_code': status.HTTP_400_BAD_REQUEST }
             response.status_code = status.HTTP_400_BAD_REQUEST
             return response_json
+        
+    # async def create_playlist(request_body: CreatePlayListSchema,response: Response):
+    #     try:
+    #         playlist_id = str(uuid.uuid1())
+    #         playlist_name = request_body.playlist_name
+    #         cover_image_base64_str = request_body.cover_image_base64_str
+    #         created_by = ''
+    #         created_on = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+
+    #         print(playlist_id,' ',playlist_name,' ',cover_image_base64_str, ' ',created_by,' ',created_on)
+            
+    #     except Exception as e:
+    #         print(e)

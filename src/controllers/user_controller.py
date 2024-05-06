@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from src.models.user_model import UserAccountMaster
 from src.schemas.user_schema import UserSignInSchema, UserSignUpSchema
 from security.hashing import HashingAlgorithm
+from security.jwt import create_access_token
 
 class UserController():
 
@@ -19,10 +20,6 @@ class UserController():
             encrypted_password = HashingAlgorithm().sha256_encoder(request_body.password)
             email_id = request_body.email_id
             created_on = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
-
-            # is_active_with_email_exists = db.query(UserAccountMaster).filter(and_(UserAccountMaster.email_id==request_body.email_id,UserAccountMaster.is_active==True))
-            
-            # if is_active_with_email_exists: raise Exception('This email already exists')
             
             new_user = UserAccountMaster(user_id=user_id,
                                          username=username,
@@ -46,16 +43,19 @@ class UserController():
     async def authenticate_user(self,request_body: UserSignInSchema,response: Response,db: Session) -> dict:
         try:
             encrypted_password = HashingAlgorithm().sha256_encoder(request_body.password)
-            is_user_exists = db.query(UserAccountMaster).filter(and_(UserAccountMaster.username == request_body.username,
-                                                                     UserAccountMaster.password == encrypted_password
-                                                                )).first()
-            if is_user_exists:
+            user = db.query(UserAccountMaster).filter(UserAccountMaster.username == request_body.username).first()
+    
+            if not user: raise Exception('Invalid username provided')
+
+            if user.password == encrypted_password:
                 response.status_code = status.HTTP_200_OK
-                response_json = { 'message': 'Signed in', 'sign_in_status': 'Success', 'status_code': status.HTTP_200_OK }
+                user_id = user.user_id
+                access_token = create_access_token({ 'user_id': user_id})
+                response_json = { 'message': 'Successfully signed in', 'access_token': access_token, 'token_type': 'bearer', 'status_code': status.HTTP_200_OK }
                 return response_json
             else:
-                raise Exception('User does not exist')
+                raise Exception('Invalid password provided')
         except Exception as e:
-            response_json = { 'message': 'An error occurred', 'error': str(e),'sign_in_status': 'Failure','status_code': status.HTTP_401_UNAUTHORIZED }
+            response_json = { 'message': str(e), 'status_code': status.HTTP_401_UNAUTHORIZED }
             response.status_code = status.HTTP_401_UNAUTHORIZED
             return response_json

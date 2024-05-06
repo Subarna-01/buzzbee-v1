@@ -8,7 +8,9 @@ pydantic-settings==2.1.0
 pydantic_core==2.10.1
 Pyrebase4==4.7.1
 python-dotenv==1.0.0
-python-jwt>=2.0.1
+python-jose==3.3.0
+python-jwt==2.0.1
+python-multipart==0.0.6
 pycryptodome>=3.6.4
 requests-toolbelt>=0.7.1,<1.0
 requests>=2.19.1,<2.30
