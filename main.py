@@ -7,11 +7,6 @@ from src.models.song_model import Base as song_model_base
 from src.models.artist_model import Base as artist_model_base
 from database.connection import engine
 
-
-user_model_base.metadata.create_all(bind=engine)
-song_model_base.metadata.create_all(bind=engine)
-artist_model_base.metadata.create_all(bind=engine)
-
 app = FastAPI()
 
 app.include_router(user_router)
@@ -24,10 +19,12 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=['*'],
-    allow_headers=['*'],
+    allow_headers=['*']
 )
 
 @app.on_event('startup')
 async def startup_event():
-    pass
+    user_model_base.metadata.create_all(bind=engine)
+    song_model_base.metadata.create_all(bind=engine)
+    artist_model_base.metadata.create_all(bind=engine)
 

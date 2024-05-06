@@ -4,7 +4,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from src.models.user_model import UserAccountMaster
-from src.schemas.user_schema import UserSignInSchema, UserSignUpSchema
+from src.schemas.user_schema import UserAuthenticationSchema, UserSignUpSchema
 from security.hashing import HashingAlgorithm
 from security.jwt import create_access_token
 
@@ -40,18 +40,29 @@ class UserController():
             return response_json
 
     
-    async def authenticate_user(self,request_body: UserSignInSchema,response: Response,db: Session) -> dict:
+    async def authenticate_user(self,request_body: UserAuthenticationSchema,response: Response,db: Session) -> dict:
         try:
             encrypted_password = HashingAlgorithm().sha256_encoder(request_body.password)
             user = db.query(UserAccountMaster).filter(UserAccountMaster.username == request_body.username).first()
     
-            if not user: raise Exception('Invalid username provided')
+            if not user: 
+                raise Exception('Invalid username provided')
 
             if user.password == encrypted_password:
-                response.status_code = status.HTTP_200_OK
                 user_id = user.user_id
+                username = user.username
+                email = user.email_id
                 access_token = create_access_token({ 'user_id': user_id})
-                response_json = { 'message': 'Successfully signed in', 'access_token': access_token, 'token_type': 'bearer', 'status_code': status.HTTP_200_OK }
+                response_json = { 'message': 'Authentication successful', 
+                                'user_details': { 
+                                    'username': username, 
+                                    'email': email 
+                                    }, 
+                                'access_token': access_token, 
+                                'token_type': 'bearer', 
+                                'status_code': status.HTTP_200_OK 
+                                }
+                response.status_code = status.HTTP_200_OK
                 return response_json
             else:
                 raise Exception('Invalid password provided')

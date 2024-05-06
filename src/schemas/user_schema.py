@@ -5,7 +5,7 @@ class UserSignUpSchema(BaseModel):
     password: str
     email_id: EmailStr
 
-class UserSignInSchema(BaseModel):
+class UserAuthenticationSchema(BaseModel):
     username: str
     password: str
 
